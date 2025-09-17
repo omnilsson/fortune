@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Emotional Fortune Cookies</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #ff8cf2, #c6a2ff);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      text-align: center;
+      color: #fffaf3;
+    }
+    h1 {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 2.8rem;
+      color: #fff200;
+      margin-bottom: 0.5rem;
+      text-shadow: 3px 3px #7b1fa2;
+    }
+    p.subtitle {
+      font-size: 1.4rem;
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    .cookie {
+      width: 250px;
+      height: 250px;
+      display: block;
+      position: relative;
+      animation: wiggle 1.2s infinite;
+      margin-bottom: 2rem;
+      object-fit: contain;
+    }
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(5deg); }
+      75% { transform: rotate(-5deg); }
+    }
+    .btn {
+      font-family: 'Fredoka', sans-serif;
+      background: #fff200;
+      color: #9b3bba;
+      padding: 1rem 2.5rem;
+      font-size: 1.3rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+      transition: transform 0.2s, background 0.3s;
+    }
+    .btn:hover {
+      background: #ffe74c;
+      transform: scale(1.05);
+    }
+    .fortune-box {
+      background: rgba(255, 250, 243, 0.95);
+      border: 3px dashed #fff200;
+      border-radius: 14px;
+      padding: 2rem;
+      max-width: 500px;
+      margin-top: 2rem;
+      font-size: 1.3rem;
+      color: #4b2e05;
+      display: none; /* initially hidden, we flip to block in JS */
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 1200ms ease, transform 1200ms ease, letter-spacing 1200ms ease;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+    }
+    .fortune-box.show { opacity: 1; transform: translateY(0); letter-spacing: normal; }
+    .fortune-box.show {
+      display: block;
+      opacity: 1;
+    }
+    .sparkles { position: relative; width: 0; height: 0; }
+    .sparkle { position: absolute; left: 50%; top: 50%; width: var(--size, 5px); height: var(--size, 5px); border-radius: 50%; background: radial-gradient(circle, #ffffff 0%, rgba(255,255,255,0.85) 45%, rgba(255,255,255,0) 70%); filter: drop-shadow(0 0 6px rgba(255,255,255,0.9)); opacity: 0.9; animation: floatUp var(--dur, 3.2s) infinite ease-in-out, twinkle calc(var(--dur, 3.2s) * 0.8) infinite ease-in-out; }
+    .sparkle::before, .sparkle::after { content: ''; position: absolute; left: 50%; top: 50%; width: calc(var(--size, 5px) * 2.2); height: 2px; transform: translate(-50%, -50%) rotate(45deg); background: linear-gradient(90deg, transparent, rgba(255,255,255,0.95), transparent); border-radius: 2px; filter: drop-shadow(0 0 4px rgba(255,255,255,0.8)); }
+    .sparkle::after { transform: translate(-50%, -50%) rotate(-45deg); }
+    @keyframes floatUp { 0% { transform: translate(var(--x), var(--y)) scale(0.6); } 50% { transform: translate(calc(var(--x) + 2px), calc(var(--y) - 8px)) scale(1); } 100% { transform: translate(var(--x), var(--y)) scale(0.6); } }
+    @keyframes twinkle { 0%, 100% { opacity: 0.4; } 40% { opacity: 0.95; } 60% { opacity: 0.6; } }
+    .cookie::before { content: ''; position: absolute; inset: -20px; border-radius: 200px; background: radial-gradient(circle at 50% 50%, rgba(255,242,0,0.45), rgba(255,242,0,0.0) 60%); filter: blur(12px); animation: halo 3s ease-in-out infinite; }
+    @keyframes halo { 0%,100% { opacity: 0.5; } 50% { opacity: 0.95; } }
+      /* Glow pulse effect for fortune text */
+    #fortuneText {
+      animation: textGlow 3s ease-in-out infinite;
+    }
+    @keyframes textGlow {
+      0%,100% { text-shadow: 0 0 6px rgba(255, 215, 0, 0.6), 0 0 12px rgba(255, 215, 0, 0.3); }
+      50% { text-shadow: 0 0 12px rgba(255, 255, 180, 0.9), 0 0 20px rgba(255, 220, 120, 0.6); }
+    }
+
+      .glow-boost {
+      animation: glowBoost 1.2s ease;
+    }
+    @keyframes glowBoost {
+      0% { text-shadow: 0 0 14px rgba(255, 255, 180, 1), 0 0 24px rgba(255, 220, 120, 0.9); }
+      100% { text-shadow: 0 0 6px rgba(255, 215, 0, 0.6), 0 0 12px rgba(255, 215, 0, 0.3); }
+    }
+
+  </style>
+</head>
+<body>
+  <h1>🔮 Crack Your Cookie!</h1>
+  <p class="subtitle">Feeling curious? The universe has a message for you…</p>
+
+  <img src="file:///Users/thomas1/Downloads/COOKIE.png" alt="Fortune Cookie" class="cookie" width="250" height="250" />
+
+  <a href="#" id="revealBtn" class="btn">✨ Reveal My Fortune (€0.50)</a>
+
+  <div class="fortune-box" id="fortuneBox">
+    <p id="fortuneText">Your mysterious message awaits...</p>
+  </div>
+
+  <script>
+    // === Stripe gating setup ===
+    // Replace with your real Stripe Payment Link
+    const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/your_payment_link_here';
+
+    // If we returned from checkout, mark session as paid
+    if (location.hash === '#paid') {
+      try { sessionStorage.setItem('ec_paid', '1'); } catch (_) {}
+      // optional: clean the hash to keep URL pretty
+      history.replaceState('', document.title, window.location.pathname + window.location.search);
+    }
+
+    const isPaid = (() => {
+      try { return sessionStorage.getItem('ec_paid') === '1'; } catch (_) { return false; }
+    })();
+
+    // Load fortunes from external file, with a safe fallback
+    let fortunesList = [];
+    const fallbackFortunes = [
+      "You’re not late; your story wanted a dramatic entrance.",
+      "Today you bend, tomorrow you bounce.",
+      "Your curiosity is a compass—follow where it points.",
+      "A tiny risk will open a funny door.",
+      "You are the plot twist you’ve been waiting for.",
+      "The detour is part of the view."
+    ];
+
+    async function loadFortunes() {
+      try {
+        const res = await fetch('fortunes.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('Network');
+        const data = await res.json();
+        fortunesList = Array.isArray(data) && data.length ? data : fallbackFortunes;
+      } catch (_) {
+        fortunesList = fallbackFortunes;
+      }
+    }
+    loadFortunes();
+
+    function randomFrom(arr){ return arr[Math.floor(Math.random() * arr.length)]; }
+
+    // Sparkle setup (base field)
+    const cookieEl = document.querySelector('.cookie');
+    const sparkleLayer = document.createElement('div');
+    sparkleLayer.className = 'sparkles';
+    cookieEl.parentElement.insertBefore(sparkleLayer, cookieEl);
+
+    function createSparkle(params={}){
+      const s = document.createElement('span');
+      s.className = 'sparkle';
+      const r = (params.rMin||160) + Math.random() * (params.rMax||120);
+      const a = Math.random() * Math.PI * 2;
+      const x = Math.cos(a) * r;
+      const y = Math.sin(a) * r;
+      const size = (params.sizeMin||3) + Math.random() * (params.sizeVar||4);
+      const dur = (params.durMin||2.6) + Math.random() * (params.durVar||2.2);
+      s.style.setProperty('--x', `${x}px`);
+      s.style.setProperty('--y', `${y}px`);
+      s.style.setProperty('--size', `${size}px`);
+      s.style.setProperty('--dur', `${dur}s`);
+      s.style.animationDelay = `${(Math.random() * 2.5).toFixed(2)}s`;
+      s.style.transform = `translate(var(--x), var(--y))`;
+      return s;
+    }
+
+    (function initBaseSparkles(){
+      for (let i = 0; i < 30; i++) sparkleLayer.appendChild(createSparkle());
+    })();
+
+    function burstSparkles(){
+      const burst = document.createDocumentFragment();
+      for (let i = 0; i < 70; i++) { // denser burst
+        burst.appendChild(createSparkle({ rMin: 90, rMax: 120, sizeMin: 3, sizeVar: 5, durMin: 1.6, durVar: 1.8 }));
+      }
+      sparkleLayer.appendChild(burst);
+      setTimeout(()=>{
+        const nodes = sparkleLayer.querySelectorAll('.sparkle');
+        nodes.forEach((el, idx)=>{ if(idx >= 30) el.remove(); });
+      }, 2400);
+    }
+
+    function showFortune() {
+      burstSparkles();
+      const box = document.getElementById('fortuneBox');
+      const text = document.getElementById('fortuneText');
+      const list = fortunesList.length ? fortunesList : fallbackFortunes;
+      text.textContent = randomFrom(list);
+      // reveal with fade-in animation
+      box.style.display = 'block';
+      box.classList.remove('show');
+      void box.offsetWidth; // force reflow
+      box.classList.add('show');
+
+      // temporarily intensify glow to sync with sparkle burst
+      text.classList.add('glow-boost');
+      setTimeout(()=> text.classList.remove('glow-boost'), 1200);
+    }
+
+    // Configure CTA based on payment state
+    const btn = document.getElementById('revealBtn');
+    function wireButton() {
+      if (isPaid) {
+        btn.textContent = '✨ Reveal My Fortune';
+        btn.onclick = (e)=>{ e.preventDefault(); showFortune(); };
+        btn.setAttribute('aria-label','Reveal my fortune');
+      } else {
+        btn.textContent = '✨ Pay €0.50 to Reveal';
+        btn.onclick = (e)=>{ e.preventDefault(); window.location.href = STRIPE_PAYMENT_LINK; };
+        btn.setAttribute('aria-label','Pay 0.50€ to reveal fortune');
+      }
+    }
+    wireButton();
+
+    // Keyboard accessibility
+    btn.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
+    });
+  </script>
+</body>
+</html>
